@@ -1,4 +1,4 @@
-#Requires -Version 5.0
+#Requires -Version 4.0
 function ConvertTo-Hashtable
 {
 <#
@@ -25,7 +25,7 @@ function ConvertTo-Hashtable
     PSCustomObject
 
 .OUTPUTS
-    hashtable
+    System.Collections.Specialized.OrderedDictionary
 
 .NOTES
     Author:  Tore Groneng

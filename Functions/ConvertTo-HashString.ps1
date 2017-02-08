@@ -1,3 +1,4 @@
+#Requires -Version 4.0
 function ConvertTo-HashString
 {
 <#
@@ -21,10 +22,7 @@ function ConvertTo-HashString
     $hashObject | ConvertTo-HashString
 
     This will convert the hashtable to the following string
-    @{
-        Name = "Tore"
-        Goal = "Rule the World"
-    }
+    @{Name = "Tore";Goal = "Rule the World";}
 
 .INPUTS
     Hashtable
@@ -41,29 +39,15 @@ function ConvertTo-HashString
 Param(
     [Parameter(ValueFromPipeLine)]
     $InputObject
-    ,
-    [string]$PreSpacing
 )
 Begin
 {
     $f = $MyInvocation.InvocationName
     Write-Verbose -Message "$f - START"
-    $newLine = [environment]::NewLine
-
-    if ($PreSpacing)
-    {
-        $endspaceCount = $PreSpacing.Length - 4
-        if ($endspaceCount -lt 0){$endspaceCount = 0}
-        $endspace = " " * $endspaceCount
-        $beginSpace = " " * $endspaceCount
-    }   
 }
 Process
 {
     $out = "@{"
-    
-    $out = $out #+ $newLine
-    $preSpace = $PreSpacing
 
     if (-not $InputObject -or $InputObject.keys.count -eq 0) {return "@{}"}
 
@@ -112,7 +96,7 @@ Process
             $DisplayKey = $null
         }
 
-        $out += "$PreSpacing$key = "
+        $out += "$key = "
         
         switch ($mode)
         {
@@ -129,16 +113,16 @@ Process
                     $ticks = $value.Ticks
                     $out += "New-Date $ticks;"
                 }
-                else {
-                    $out += '"' + $value + '";'# + $newLine 
-                }
-                
+                else 
+                {
+                    $out += '"' + $value + '";'
+                }                
             }
 
             'hashtable'
             {               
-                $stringValue = ConvertTo-HashString -InputObject $value #-PreSpacing "$PreSpacing    "
-                $out += $stringValue + ";" #+ $newLine
+                $stringValue = ConvertTo-HashString -InputObject $value
+                $out += $stringValue + ";"
             }
 
             'HashTableValue'
@@ -146,9 +130,9 @@ Process
                 $stringValue = ""
                 foreach ($arrayHash in $value)
                 {                                       
-                    $hashString = ConvertTo-HashString -InputObject $arrayHash #-PreSpacing "$PreSpacing    "
+                    $hashString = ConvertTo-HashString -InputObject $arrayHash
                     $hash = "$hashString"
-                    $hash = "$hash,"# + $newLine
+                    $hash = "$hash,"
                     $stringValue += $hash
                 }
                 $separatorIndex = $stringValue.LastIndexOf(",")
@@ -162,16 +146,19 @@ Process
                 {
                     $out += ($value -join ",") + ";"
                 }
-                else {
-                    $out += '"' +($value -join '","') + '";' #+ $newLine
+                else 
+                {
+                    $out += '"' +($value -join '","') + '";'
                 }
                 
             }
             
-            Default {}
+            default 
+            {
+                Write-Error -Message "Invalid mode in funtion $f"
+            }
         }
-    }
-    #$out += "$endspace}"
+    }   
     $out += "}"
     $out          
 }

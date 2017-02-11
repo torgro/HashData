@@ -2,7 +2,7 @@
 function New-Date
 {
 [cmdletbinding()]
-Param(
+Param (
     [Parameter(Position=0)]
     [int64]
     $Ticks

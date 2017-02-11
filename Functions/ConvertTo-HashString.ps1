@@ -11,9 +11,6 @@ function ConvertTo-HashString
 .PARAMETER InputObject
     The object that is to be converted
 
-.PARAMETER PreSpacing
-    Number of spaces used for indentation
-
 .EXAMPLE
     $hashObject = @{
         Name = "Tore"
@@ -36,15 +33,17 @@ function ConvertTo-HashString
     Twitter: @ToreGroneng
 #>
 [cmdletbinding()]
-Param(
+Param (
     [Parameter(ValueFromPipeLine)]
     $InputObject
 )
+
 Begin
 {
     $f = $MyInvocation.InvocationName
     Write-Verbose -Message "$f - START"
 }
+
 Process
 {
     $out = "@{"
@@ -161,6 +160,11 @@ Process
     }   
     $out += "}"
     $out          
+}
+
+End 
+{
+    Write-Verbose -Message "$f - End"
 }
 }
 

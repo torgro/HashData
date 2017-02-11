@@ -34,7 +34,7 @@ function Assert-ScriptString
     Twitter: @ToreGroneng
 #>
 [cmdletbinding()]
-Param(
+Param (
     [Parameter(ValueFromPipeline)]
     [string]
     $Data

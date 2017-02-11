@@ -11,7 +11,7 @@ function Import-HashData
     will result in an error and the import will fail.
 
 .PARAMETER Path
-    The target file that contains the Specialized object(s).
+    The target file that contains the Serialized object(s).
 
 .PARAMETER UnsafeMode
     If supplied, no you allow any command to be executed in the runspace when the object is deserialized.
@@ -32,28 +32,55 @@ function Import-HashData
     Website: www.firstpoint.no
     Twitter: @ToreGroneng
 #>
-[cmdletbinding()]
-Param(
+[cmdletbinding(
+    SupportsShouldProcess=$true,
+    ConfirmImpact='medium'    
+)]
+Param (
     [string]
     $Path
     ,
     [switch]
     $UnsafeMode
 )
+    $f = $MyInvocation.InvocationName
+    Write-Verbose -Message "$f - START"
+
     if (-not (Test-Path -Path $Path))
     {
         Write-Error -Message "Unable to find file [$path]" -ErrorAction Stop
     }
 
-    $data = Get-Content -Path $path -Encoding UTF8 -Raw -ReadCount 0
+    Write-Verbose -Message "$f -  Importing data from [$path]"
+
+    [string]$data = Get-Content -Path $path -Encoding UTF8 -Raw -ReadCount 0
+
     if ($UnsafeMode.IsPresent)
     {
-        Write-Warning -Message "You are importing persisted data without cheching RestrictedLanguage because you supplied the UnSafeMode switch."
-        $script = [scriptblock]::Create($data)
-        & $script
+        #fixme this is a hack
+        $PreviousConfirmPreference = $ConfirmPreference
+        $ConfirmPreference = "low"
+        if ($PScmdlet.ShouldProcess($path, "Unsafe script invokation"))
+        {
+            $ConfirmPreference = $PreviousConfirmPreference
+            Write-Warning -Message "You are importing persisted data without cheching RestrictedLanguage because you supplied the UnSafeMode switch."
+            $script = [scriptblock]::Create($data)
+            & $script
+        }        
     }
     else 
     {
-        Assert-PersistedData -Data $data -ErrorAction Stop
+        #fixme this is a hack
+        $PreviousConfirmPreference = $ConfirmPreference
+        $ConfirmPreference = "high"
+        
+        if ($PScmdlet.ShouldProcess($path, "Safe script invokation"))
+        {            
+            $ConfirmPreference = $PreviousConfirmPreference
+            Write-Verbose -Message "$f -  Asserting script content"
+            Assert-ScriptString -Data $data -ErrorAction Stop            
+        }        
     }    
+
+    Write-Verbose -Message "$f - END"
 }

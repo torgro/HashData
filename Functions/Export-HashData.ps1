@@ -11,7 +11,7 @@ function Export-HashData
     only can create a date from a long tick value.
 
 .PARAMETER Path
-    The target file that will store the Specialized object
+    The target file that will store the serialized object
 
 .PARAMETER InputObject
     The object that should be Serialized.
@@ -43,10 +43,10 @@ function Export-HashData
     Twitter: @ToreGroneng
 #>
 [cmdletbinding(
-     SupportsShouldProcess=$true,
-    ConfirmImpact='Medium'
+    SupportsShouldProcess=$true,
+    ConfirmImpact='High'    
 )]
-Param(
+Param (
     [string]
     $Path
     ,
@@ -55,20 +55,19 @@ Param(
     ,
     [switch]
     $Append
-    ,
-    [switch]
-    $Force
 )
-    if ($Append.IsPresent)
-    {
-        if (-not (Test-Path -Path $Path))
-        {
-            Set-Content -Path $Path -Value $null -Encoding UTF8
-        }
-    }
 
+Begin
+{
+    $f = $MyInvocation.InvocationName
+    Write-Verbose -Message "$f - START"
+}
+    
+Process 
+{    
     $fileContent = ""
 
+    Write-Verbose -Message "$f -  Converting inputobject to string"
     if ($InputObject -is [hashtable] -or $InputObject -is  [System.Collections.Specialized.OrderedDictionary])
     {
         $fileContent = $InputObject | ConvertTo-HashString
@@ -85,31 +84,29 @@ Param(
         Path = $Path
         Value = $fileContent
         Encoding = "UTF8"
-    }
+    }    
 
-    $shouldProcessOperation = "Creating file"
-    if ($Force.IsPresent)
-    {
-        $file.Add("Force", $true)
-        $shouldProcessOperation = "Overwriting file"
-    }
-
+    
     if ($Append.IsPresent)
-    {
-        if ($PSCmdlet.ShouldProcess("$Path", "Append to file"))
-        {
-            if (-not (Test-Path -Path $Path))
-            {
-                Set-Content -Path $Path -Value $null -Encoding UTF8
-            }        
+    {        
+        if ($PSCmdlet.ShouldProcess("$Path", "$f - Append to file"))
+        {        
+            Write-Verbose -Message "$f -  Appending to file [$Path]"
             Add-Content @file
         }        
     }
     else
-    {
-        if ($PSCmdlet.ShouldProcess("$Path", "$shouldProcessOperation"))
+    {       
+        if ($PSCmdlet.ShouldProcess("$Path", "$f - Overwriting file"))
         {            
+            Write-Verbose -Message "$f -  Writing to file [$Path]"
             Set-Content @file
         }              
     }
+}
+
+End 
+{
+    Write-Verbose -Message "$f - END"
+}
 }

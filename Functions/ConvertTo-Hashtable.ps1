@@ -33,17 +33,20 @@ function ConvertTo-Hashtable
     Twitter: @ToreGroneng
 #>
 [cmdletbinding()]
-Param(
+Param (
     [Parameter(ValueFromPipeline)]
     [PSCustomObject]$InputObject
 )
-Begin{
+
+Begin
+{
     $f = $MyInvocation.InvocationName
     Write-Verbose -Message "$f - START"
 }
+
 Process
 {   
-    Write-Verbose -Message "$F -  processing $($inputobject.GetType().Name)" 
+    Write-Verbose -Message "$F -  Processing [$($inputobject.GetType().Name)]" 
     if ($InputObject -is [array])
     {
         Write-Verbose -Message "Is array object"
@@ -79,7 +82,7 @@ Process
 
             if ($value -is [array])
             {
-                Write-Verbose -Message "Is array value"
+                Write-Verbose -Message "$f -  Value is array"
                 $hashValue = @()
                 if ($value[0] -is [hashtable] -or $value[0] -is [System.Collections.Specialized.OrderedDictionary] -or $value[0] -is [PSCustomObject])
                 {
@@ -98,5 +101,10 @@ Process
         }
     }
     $hash
+}
+
+End 
+{
+    Write-Verbose -Message "$f - END"
 }
 }

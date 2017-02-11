@@ -18,6 +18,10 @@ The benefit is a really small footprint when you store the data on disk.
 
 > DateTime
 
+> Array of Strings
+
+> Array of Integers
+
 
 ## Status
 
@@ -26,7 +30,7 @@ Not published to the PowershellGallery yet!
 
 ## Bloglink
 
-Here is a link to a blogpost explaining stuff!
+Here is a link to a blogpost explaining stuff [http://asaconsultant.blogspot.no/2017/02/serialize-data-with-powershell.html](http://asaconsultant.blogspot.no/2017/02/serialize-data-with-powershell.html)!
 
 Cheers
 

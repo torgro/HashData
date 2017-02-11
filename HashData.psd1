@@ -33,7 +33,7 @@ Copyright = '(c) 2016 Tore Groneng. All rights reserved. '
 Description = 'A Powershell module for saving and loading objects as hashtable'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '4.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''

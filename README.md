@@ -25,7 +25,7 @@ The benefit is a really small footprint when you store the data on disk.
 
 ## Status
 
-Not published to the PowershellGallery yet!
+Module is published [https://www.powershellgallery.com/packages/hashdata](https://www.powershellgallery.com/packages/hashdata)
 
 
 ## Bloglink

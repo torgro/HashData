@@ -26,4 +26,4 @@ $tags = @(
 ) 
 
 
-Publish-Module -NuGetApiKey $APIkey -Name .\poshdata.psd1
+Publish-Module -NuGetApiKey $APIkey -Name .\hashdata.psd1

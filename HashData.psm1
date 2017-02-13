@@ -1,8 +1,7 @@
 
-foreach ($function in (Get-ChildItem -file -Path(Join-Path -Path $PSScriptRoot -ChildPath .\functions)))
-{
-    Write-Verbose -Message "Importing function $($function.FullName)"
-    . $function.FullName
+foreach ($file in (Get-ChildItem -file -Path(Join-Path -Path $PSScriptRoot -ChildPath .\functions)))
+{    
+    . ([Scriptblock]::Create([System.IO.File]::ReadAllText($file.FullName, [System.Text.Encoding]::UTF8)))
 }
 
 
